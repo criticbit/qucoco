@@ -1,0 +1,25 @@
+{
+  "expo": {
+    "name": "CoQuCo",
+    "slug": "coquco",
+    "version": "1.0.0",
+    "scheme": "coquco",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "platforms": ["ios", "android", "web"],
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.coquco.app",
+      "infoPlist": {
+        "NSCameraUsageDescription": "CoQuCo uses the camera to analyze coffee beans and beverages."
+      }
+    },
+    "android": {
+      "package": "com.coquco.app",
+      "permissions": ["android.permission.CAMERA"]
+    },
+    "plugins": [
+      "expo-router"
+    ]
+  }
+}
