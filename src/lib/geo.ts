@@ -1,4 +1,4 @@
-// Geo helpers for CoQuCo: read GPS from JPEG EXIF, compute a convex hull
+// Geo helpers for QuCoCo: read GPS from JPEG EXIF, compute a convex hull
 // polygon and its area. Pure JS — works on iOS, Android and web.
 
 import type { GeoPoint } from '../types';

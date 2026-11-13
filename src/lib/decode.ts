@@ -1,4 +1,4 @@
-// Pixel decoding for CoQuCo — pure JS, no native image modules required,
+// Pixel decoding for QuCoCo — pure JS, no native image modules required,
 // so it behaves identically on iOS, Android and web.
 
 import { Platform } from 'react-native';

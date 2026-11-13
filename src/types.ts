@@ -1,4 +1,4 @@
-// Core data models for CoQuCo (Coffee Quality Control)
+// Core data models for QuCoCo (Coffee Quality Control)
 
 export type BeanType = 'green' | 'roasted';
 

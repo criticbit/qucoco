@@ -1,9 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import type { BeanLot, Beverage, CropPlot } from '../types';
 
-const BEANS_KEY = 'coquco.beans.v1';
-const BEVERAGES_KEY = 'coquco.beverages.v1';
-const PLOTS_KEY = 'coquco.plots.v1';
+const BEANS_KEY = 'qucoco.beans.v1';
+const BEVERAGES_KEY = 'qucoco.beverages.v1';
+const PLOTS_KEY = 'qucoco.plots.v1';
 
 async function readAll<T>(key: string): Promise<T[]> {
   const raw = await AsyncStorage.getItem(key);
