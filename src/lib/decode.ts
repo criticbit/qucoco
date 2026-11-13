@@ -2,7 +2,7 @@
 // so it behaves identically on iOS, Android and web.
 
 import { Platform } from 'react-native';
-import { readAsStringAsync } from 'expo-file-system';
+import { File } from 'expo-file-system';
 import { inflate } from 'pako';
 import * as jpeg from 'jpeg-js';
 
@@ -36,9 +36,13 @@ export async function loadPixels(imageUri: string): Promise<ImagePixels> {
   throw new Error('Unsupported image format — save the photo as JPEG or PNG');
 }
 
+export async function readBytes(imageUri: string): Promise<Uint8Array> {
+  return Platform.OS === 'web' ? readBytesWeb(imageUri) : readBytesNative(imageUri);
+}
+
 async function readBytesNative(imageUri: string): Promise<Uint8Array> {
-  const b64 = await readAsStringAsync(imageUri, { encoding: 'base64' });
-  return base64ToBytes(b64);
+  const buf = await new File(imageUri).arrayBuffer();
+  return new Uint8Array(buf);
 }
 
 async function readBytesWeb(imageUri: string): Promise<Uint8Array> {

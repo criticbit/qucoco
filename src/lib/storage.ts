@@ -1,8 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import type { BeanLot, Beverage } from '../types';
+import type { BeanLot, Beverage, CropPlot } from '../types';
 
 const BEANS_KEY = 'coquco.beans.v1';
 const BEVERAGES_KEY = 'coquco.beverages.v1';
+const PLOTS_KEY = 'coquco.plots.v1';
 
 async function readAll<T>(key: string): Promise<T[]> {
   const raw = await AsyncStorage.getItem(key);
@@ -15,6 +16,48 @@ async function writeAll<T>(key: string, items: T[]) {
 
 export function genId(): string {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+}
+
+// ---- Crop plots ----
+
+export async function getCropPlots(): Promise<CropPlot[]> {
+  const plots = await readAll<CropPlot>(PLOTS_KEY);
+  return plots.sort((a, b) => b.createdAt - a.createdAt);
+}
+
+export async function getCropPlot(id: string): Promise<CropPlot | null> {
+  const plots = await readAll<CropPlot>(PLOTS_KEY);
+  return plots.find((p) => p.id === id) ?? null;
+}
+
+export async function saveCropPlot(plot: CropPlot): Promise<void> {
+  const plots = await readAll<CropPlot>(PLOTS_KEY);
+  plots.push(plot);
+  await writeAll(PLOTS_KEY, plots);
+}
+
+export async function updateCropPlot(plot: CropPlot): Promise<void> {
+  const plots = (await readAll<CropPlot>(PLOTS_KEY)).map((p) =>
+    p.id === plot.id ? plot : p
+  );
+  await writeAll(PLOTS_KEY, plots);
+}
+
+export async function deleteCropPlot(id: string): Promise<void> {
+  const plots = (await readAll<CropPlot>(PLOTS_KEY)).filter((p) => p.id !== id);
+  // Unlink bean lots that referenced this plot
+  const lots = (await readAll<BeanLot>(BEANS_KEY)).map((l) =>
+    l.cropPlotId === id ? { ...l, cropPlotId: undefined } : l
+  );
+  await Promise.all([
+    writeAll(PLOTS_KEY, plots),
+    writeAll(BEANS_KEY, lots),
+  ]);
+}
+
+export function plotShortId(plot: CropPlot): string {
+  // Human-friendly short code for URLs / QR, taken from the id.
+  return plot.id.slice(-6).toUpperCase();
 }
 
 // ---- Bean lots ----

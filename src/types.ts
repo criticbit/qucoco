@@ -2,6 +2,14 @@
 
 export type BeanType = 'green' | 'roasted';
 
+/** A GPS point attached to a plot photo (WGS84). */
+export interface GeoPoint {
+  lat: number;
+  lng: number;
+  /** Horizontal accuracy in meters, if known */
+  accuracy?: number;
+}
+
 export interface BeanAnalysis {
   /** 0..100 overall bean quality score (color consistency, uniformity, type match) */
   score: number;
@@ -25,6 +33,34 @@ export type RoastLevel =
   | 'Dark'
   | 'Very Dark';
 
+/** One photo of a crop plot. */
+export interface PlotPhoto {
+  id: string;
+  imageUri: string;
+  takenAt: number;
+  /** Geo tag from the photo EXIF, if present. */
+  geo?: GeoPoint;
+  /** Farmer confirmed the location of this photo (default true). */
+  locationSaved: boolean;
+}
+
+export interface CropPlot {
+  id: string;
+  createdAt: number;
+  name: string;
+  photos: PlotPhoto[];
+  /**
+   * Convex-hull polygon of the photos that have a saved location.
+   * Filled in when the plot is saved.
+   */
+  polygon?: GeoPoint[];
+  /** Area in m² derived from the polygon. */
+  areaM2?: number;
+  /** Mean photo location, used as the plot's representative point. */
+  center?: GeoPoint;
+  notes?: string;
+}
+
 export interface BeanLot {
   id: string;
   createdAt: number;
@@ -32,6 +68,8 @@ export interface BeanLot {
   imageUri: string;
   beanType: BeanType;
   analysis: BeanAnalysis;
+  /** Links this lot to the plot it was grown on, if any. */
+  cropPlotId?: string;
   origin?: string;
   notes?: string;
 }
